@@ -23,11 +23,16 @@ app.get('/api/projects', async (req, res) => {
       },
     });
 
-    const projects = response.data.filter(project => {
+    let projects = response.data;
+
+    // If a date is provided, filter projects based on created_at date
+    if (date) {
+      projects = projects.filter(project => {
         const createdAt = new Date(project.created_at);
         const filterDate = new Date(date);
         return createdAt >= filterDate;
       });
+    }
     res.json(projects);
   } catch (error) {
     console.error('Error fetching projects:', error);

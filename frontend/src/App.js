@@ -14,7 +14,11 @@ function App() {
 
   const handleFetchProjects = () => {
     setFetching(true);
-    axios.get(`/api/projects?token=${token}&date=${selectedDate}`)
+    let apiUrl = `/api/projects?token=${token}`;
+    if (selectedDate) {
+      apiUrl += `&date=${selectedDate}`;
+    }
+    axios.get(apiUrl)
       .then(response => {
         setProjects(response.data);
         setFetching(false);
