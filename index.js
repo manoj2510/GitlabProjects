@@ -17,17 +17,17 @@ app.get('/api/projects', async (req, res) => {
 
     let url = `${gitlabApiBaseUrl}/projects?membership=true`;
 
-    if (date) {
-      url += `?created_after=${encodeURIComponent(date)}`;
-    }
-
     const response = await axios.get(url, {
       headers: {
         'PRIVATE-TOKEN': token,
       },
     });
 
-    const projects = response.data;
+    const projects = response.data.filter(project => {
+        const createdAt = new Date(project.created_at);
+        const filterDate = new Date(date);
+        return createdAt >= filterDate;
+      });
     res.json(projects);
   } catch (error) {
     console.error('Error fetching projects:', error);

@@ -10,12 +10,20 @@ function App() {
   const [commits, setCommits] = useState([]);
   const [token, setToken] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
+  const [fetching, setFetching] = useState(false);
 
-  useEffect(() => {
+  const handleFetchProjects = () => {
+    setFetching(true);
     axios.get(`/api/projects?token=${token}&date=${selectedDate}`)
-      .then(response => setProjects(response.data))
-      .catch(error => console.error('Error fetching projects:', error));
-  }, [token, selectedDate]);
+      .then(response => {
+        setProjects(response.data);
+        setFetching(false);
+      })
+      .catch(error => {
+        console.error('Error fetching projects:', error);
+        setFetching(false);
+      });
+  };
 
   const handleProjectSelect = async (projectId) => {
     setSelectedProject(projectId);
@@ -40,7 +48,9 @@ function App() {
             Filter Projects Created On or After:
             <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
           </label>
-          <button type='submit'></button>
+          <button onClick={handleFetchProjects} disabled={fetching}>
+            {fetching ? 'Fetching...' : 'Fetch Projects'}
+          </button>
         </div>
         <div className="project-list">
           <h2>Projects</h2>
