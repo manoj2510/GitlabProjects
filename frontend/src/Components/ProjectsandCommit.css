@@ -136,8 +136,8 @@
     background-color: #fff;
     border-radius: 5px;
     padding: 20px;
-    max-width: 80%;
-    max-height: 80%;
+    max-width: 90%; /* Adjust the width as needed */
+    max-height: 90%; /* Adjust the height as needed */
     overflow: auto;
     position: relative;
   }
@@ -170,5 +170,26 @@
   .modal-content .project-created-date {
     font-size: 14px;
     color: #888;
+  }
+  
+
+  
+  .commit-details {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+  }
+  
+  .commit-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .commit-message {
+    margin-top: 5px;
+    color:black;
+    font-size: large;
   }
   

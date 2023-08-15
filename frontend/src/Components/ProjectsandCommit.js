@@ -116,9 +116,14 @@ function ProjectList({ projects, handleProjectSelect }) {
             <ul>
               {projectCommits.map((commit) => (
                 <li key={commit.id}>
-                  <strong className="project-description">
-                    {commit.author_name}:{commit.committed_date}
-                  </strong>
+                  <div className="commit-details">
+                    <div className="commit-header">
+                      <strong className="project-description">
+                        {commit.author_name}: {commit.committed_date}
+                      </strong>
+                    </div>
+                    <p className="commit-message">{commit.message}</p>
+                  </div>
                 </li>
               ))}
             </ul>
