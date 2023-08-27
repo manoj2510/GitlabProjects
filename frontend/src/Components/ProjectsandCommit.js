@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import * as d3 from "d3";
 import "./ProjectsandCommit.css";
+import BarGraph from "./BarGraph";
 
 function ProjectsAndCommits() {
   const [projects, setProjects] = useState([]);
@@ -73,11 +75,76 @@ function ProjectList({ projects, handleProjectSelect }) {
     setSelectedProject(project);
     try {
       const response = await axios.get(`/api/commits/${projectId}`);
-      const formattedCommits = response.data.map((commit) => ({
-        ...commit,
-        committed_date: new Date(commit.committed_date).toLocaleDateString(),
+      const commits = response.data;
+
+      // Group commits by author name and count the number of commits for each author
+      const authorCommitCounts = {};
+      commits.forEach((commit) => {
+        const author = commit.author_name;
+        authorCommitCounts[author] = (authorCommitCounts[author] || 0) + 1;
+      });
+
+      // Format the data for the bar chart
+      const formattedData = Object.keys(authorCommitCounts).map((author) => ({
+        author_name: author,
+        commit_frequency: authorCommitCounts[author],
       }));
-      setProjectCommits(formattedCommits);
+
+      setProjectCommits(formattedData);
+      // const formattedCommits = response.data.map((commit) => ({
+      //   ...commit,
+      //   committed_date: new Date(commit.committed_date).toLocaleDateString(),
+      // }));
+      // setProjectCommits(formattedCommits);
+
+      // // D3.js code to create the contribution chart
+      // const svgWidth = 400;
+      // const svgHeight = 300;
+      // const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+      // const width = svgWidth - margin.left - margin.right;
+      // const height = svgHeight - margin.top - margin.bottom;
+
+      // const svg = d3
+      //   .select("#contribution-chart-container")
+      //   .append("svg")
+      //   .attr("width", svgWidth)
+      //   .attr("height", svgHeight);
+
+      // const xScale = d3
+      //   .scaleBand()
+      //   .domain(formattedCommits.map((commit) => commit.author_name))
+      //   .range([margin.left, width - margin.right])
+      //   .padding(0.1);
+
+      // const yScale = d3
+      //   .scaleLinear()
+      //   .domain([0, d3.max(formattedCommits, (commit) => commit.commits)])
+      //   .nice()
+      //   .range([height - margin.bottom, margin.top]);
+
+      // svg
+      //   .selectAll("rect")
+      //   .data(formattedCommits)
+      //   .enter()
+      //   .append("rect")
+      //   .attr("x", (commit) => xScale(commit.author_name))
+      //   .attr("y", (commit) => yScale(commit.commits))
+      //   .attr("width", xScale.bandwidth())
+      //   .attr(
+      //     "height",
+      //     (commit) => height - margin.bottom - yScale(commit.commits)
+      //   )
+      //   .attr("fill", "steelblue");
+
+      // svg
+      //   .append("g")
+      //   .attr("transform", `translate(0, ${height - margin.bottom})`)
+      //   .call(d3.axisBottom(xScale));
+
+      // svg
+      //   .append("g")
+      //   .attr("transform", `translate(${margin.left}, 0)`)
+      //   .call(d3.axisLeft(yScale));
     } catch (error) {
       console.error("Error fetching commits:", error);
     }
@@ -113,7 +180,10 @@ function ProjectList({ projects, handleProjectSelect }) {
               &times;
             </span>
             <h3 className="project-name">{selectedProject.name}</h3>
-            <ul>
+            {/* Add a container for the contribution chart */}
+            <div id="contribution-chart-container"></div>
+            <BarGraph data={projectCommits} width={500} height={600} />
+            {/* <ul>
               {projectCommits.map((commit) => (
                 <li key={commit.id}>
                   <div className="commit-details">
@@ -126,10 +196,10 @@ function ProjectList({ projects, handleProjectSelect }) {
                   </div>
                 </li>
               ))}
-            </ul>
-            <span className="project-created-date">
+            </ul> */}
+            {/* <span className="project-created-date">
               Created: {selectedProject.created_at}
-            </span>
+            </span> */}
           </div>
         </div>
       )}
