@@ -3,11 +3,11 @@ import axios from "axios";
 import * as d3 from "d3";
 import "./ProjectsandCommit.css";
 import BarGraph from "./BarGraph";
+import DownloadButton from "./DownloadButton";
 
 function ProjectsAndCommits() {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [commits, setCommits] = useState([]);
   const [token, setToken] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [fetching, setFetching] = useState(false);
@@ -69,6 +69,7 @@ function ProjectsAndCommits() {
 function ProjectList({ projects, handleProjectSelect }) {
   const [selectedProject, setSelectedProject] = useState(null);
   const [projectCommits, setProjectCommits] = useState([]);
+  const [commitState, setCommitState] = useState([]);
 
   const openModal = async (projectId) => {
     const project = projects.find((p) => p.id === projectId);
@@ -76,6 +77,13 @@ function ProjectList({ projects, handleProjectSelect }) {
     try {
       const response = await axios.get(`/api/commits/${projectId}`);
       const commits = response.data;
+
+      const commitDetails = response.data.map((commit) => ({
+        ...commit,
+        committed_date: new Date(commit.committed_date).toLocaleDateString(),
+      }));
+
+      setCommitState(commitDetails);
 
       // Group commits by author name and count the number of commits for each author
       const authorCommitCounts = {};
@@ -91,60 +99,6 @@ function ProjectList({ projects, handleProjectSelect }) {
       }));
 
       setProjectCommits(formattedData);
-      // const formattedCommits = response.data.map((commit) => ({
-      //   ...commit,
-      //   committed_date: new Date(commit.committed_date).toLocaleDateString(),
-      // }));
-      // setProjectCommits(formattedCommits);
-
-      // // D3.js code to create the contribution chart
-      // const svgWidth = 400;
-      // const svgHeight = 300;
-      // const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-      // const width = svgWidth - margin.left - margin.right;
-      // const height = svgHeight - margin.top - margin.bottom;
-
-      // const svg = d3
-      //   .select("#contribution-chart-container")
-      //   .append("svg")
-      //   .attr("width", svgWidth)
-      //   .attr("height", svgHeight);
-
-      // const xScale = d3
-      //   .scaleBand()
-      //   .domain(formattedCommits.map((commit) => commit.author_name))
-      //   .range([margin.left, width - margin.right])
-      //   .padding(0.1);
-
-      // const yScale = d3
-      //   .scaleLinear()
-      //   .domain([0, d3.max(formattedCommits, (commit) => commit.commits)])
-      //   .nice()
-      //   .range([height - margin.bottom, margin.top]);
-
-      // svg
-      //   .selectAll("rect")
-      //   .data(formattedCommits)
-      //   .enter()
-      //   .append("rect")
-      //   .attr("x", (commit) => xScale(commit.author_name))
-      //   .attr("y", (commit) => yScale(commit.commits))
-      //   .attr("width", xScale.bandwidth())
-      //   .attr(
-      //     "height",
-      //     (commit) => height - margin.bottom - yScale(commit.commits)
-      //   )
-      //   .attr("fill", "steelblue");
-
-      // svg
-      //   .append("g")
-      //   .attr("transform", `translate(0, ${height - margin.bottom})`)
-      //   .call(d3.axisBottom(xScale));
-
-      // svg
-      //   .append("g")
-      //   .attr("transform", `translate(${margin.left}, 0)`)
-      //   .call(d3.axisLeft(yScale));
     } catch (error) {
       console.error("Error fetching commits:", error);
     }
@@ -181,8 +135,34 @@ function ProjectList({ projects, handleProjectSelect }) {
             </span>
             <h3 className="project-name">{selectedProject.name}</h3>
             {/* Add a container for the contribution chart */}
-            <div id="contribution-chart-container"></div>
-            <BarGraph data={projectCommits} width={500} height={600} />
+            <div id="contribution-chart-container" className="graph-container">
+              <BarGraph data={projectCommits} width={500} height={400} />
+            </div>
+
+            <table className="commit-table">
+              <thead>
+                <tr>
+                  <th>Commit Author</th>
+                  <th>Commit Date</th>
+                  <th>Commit Message</th>
+                </tr>
+              </thead>
+              <tbody>
+                {commitState.map((commit) => (
+                  <tr key={commit.id}>
+                    <td>{commit.author_name}</td>
+                    <td>{commit.committed_date}</td>
+                    <td>{commit.message}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {/* Use the DownloadButton component and pass the projectId */}
+            <DownloadButton
+              projectId={selectedProject.id}
+              projectName={selectedProject.name}
+            />
+
             {/* <ul>
               {projectCommits.map((commit) => (
                 <li key={commit.id}>
