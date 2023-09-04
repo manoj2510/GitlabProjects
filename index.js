@@ -61,6 +61,30 @@ app.get("/api/commits/:projectId", async (req, res) => {
   }
 });
 
+// API endpoint to fetch project members for a project
+app.get("/api/project-members/:projectId", async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const token = req.query.token || ""; // Get PAT from query parameter
+
+    // Fetch project members using the GitLab API
+    const response = await axios.get(
+      `${gitlabApiBaseUrl}/projects/${projectId}/members`,
+      {
+        headers: {
+          "PRIVATE-TOKEN": token,
+        },
+      }
+    );
+
+    const members = response.data;
+    res.json(members);
+  } catch (error) {
+    console.error("Error fetching project members:", error);
+    res.status(500).json({ error: "Error fetching project members" });
+  }
+});
+
 // API to retrieve the student details for each project. To record contribution
 app.get("/api/student-details/:projectId", async (req, res) => {
   try {

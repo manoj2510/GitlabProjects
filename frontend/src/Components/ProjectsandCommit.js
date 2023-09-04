@@ -71,6 +71,7 @@ function ProjectList({ projects, handleProjectSelect }) {
   const [selectedProject, setSelectedProject] = useState(null);
   const [projectCommits, setProjectCommits] = useState([]);
   const [commitState, setCommitState] = useState([]);
+  const [projectMembers, setProjectMembers] = useState([]);
 
   const openModal = async (projectId) => {
     const project = projects.find((p) => p.id === projectId);
@@ -85,6 +86,13 @@ function ProjectList({ projects, handleProjectSelect }) {
       }));
 
       setCommitState(commitDetails);
+
+      //API call to present project members in the bar graph
+      // const membersResponse = await axios.get(
+      //   `/api/project-members/${projectId}`
+      // );
+      // const projectMembers = membersResponse.data;
+      // setProjectMembers(projectMembers);
 
       // Group commits by author name and count the number of commits for each author
       const authorCommitCounts = {};
