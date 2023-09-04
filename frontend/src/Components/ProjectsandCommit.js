@@ -4,6 +4,7 @@ import * as d3 from "d3";
 import "./ProjectsandCommit.css";
 import BarGraph from "./BarGraph";
 import DownloadButton from "./DownloadButton";
+import StudentDetailsTable from "./StudentDetailsTable";
 
 function ProjectsAndCommits() {
   const [projects, setProjects] = useState([]);
@@ -110,7 +111,7 @@ function ProjectList({ projects, handleProjectSelect }) {
 
   return (
     <div className="ProjectList">
-      <h2 className="project-list-heading">Projects</h2>
+      <h2 style={{ color: "white" }}>Projects</h2>
       <div className="project-cards-container">
         {projects.map((project) => (
           <div
@@ -136,7 +137,7 @@ function ProjectList({ projects, handleProjectSelect }) {
             <h3 className="project-name">{selectedProject.name}</h3>
             {/* Add a container for the contribution chart */}
             <div id="contribution-chart-container" className="graph-container">
-              <BarGraph data={projectCommits} width={500} height={400} />
+              <BarGraph data={projectCommits} width={400} height={300} />
             </div>
 
             <table className="commit-table">
@@ -157,6 +158,8 @@ function ProjectList({ projects, handleProjectSelect }) {
                 ))}
               </tbody>
             </table>
+            <StudentDetailsTable projectId={selectedProject.id} />
+
             {/* Use the DownloadButton component and pass the projectId */}
             <DownloadButton
               projectId={selectedProject.id}
