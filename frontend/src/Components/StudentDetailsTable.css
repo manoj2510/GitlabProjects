@@ -1,0 +1,59 @@
+/* Style for the container div */
+.details-container {
+    max-width: 800px; /* Adjust the max width as needed */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 20px; /* Add some padding to the container */
+    border: 1px solid #ddd; /* Add a border to the container */
+    border-radius: 5px; /* Add rounded corners to the container */
+    background-color: #fff; /* Background color for the container */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add a subtle box shadow */
+  }
+  
+  /* Style for the h2 heading */
+  .container h2 {
+    color: #333; /* Heading text color */
+    font-size: 24px; /* Heading font size */
+    margin-bottom: 20px; /* Space below the heading */
+  }
+
+  /* Style for the table container */
+.student-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  /* Style for table headers */
+  .student-details-table th {
+    background-color: #1a4169; /* Header background color */
+    color: whitesmoke; /* Header text color */
+    font-weight: bold;
+    padding: 12px;
+    text-align: left;
+    font-size:large;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  /* Style for table data cells */
+  .student-details-table td {
+    padding: 12px;
+    color: black;
+    font-size:smaller;
+    border-bottom: 1px solid #ddd;
+  }
+  .student-details-table tr{
+    font-size: 19px;
+  }
+  
+  /* Style for alternate rows (zebra-striping) */
+  .student-details-table tr:nth-child(even) {
+    background-color: #f2f2f2; /* Even row background color */
+  }
+  
+  /* Hover effect for table rows */
+  .student-details-table tr:hover {
+    background-color: #ddd; /* Hovered row background color */
+    transition: background-color 0.3s ease;
+  }
+  
+  
